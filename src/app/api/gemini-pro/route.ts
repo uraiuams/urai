@@ -18,11 +18,25 @@ import { proRequestSchema } from "@/lib/validate/pro-request-schema";
 
 import { GeneralSettings } from "@/types";
 
+function createOnceFunction() {
+  let hasRun = false;
+
+  return function() {
+    const executed = !hasRun; // Flag to indicate execution
+    if (!hasRun) {
+      console.log("Function executed only once!");
+      hasRun = true;
+    }
+    return executed; // Return execution status
+  };
+}
+
 export const runtime = "edge";
 
 export async function POST(req: Request) {
+  const myOnceFunction = createOnceFunction();
   const parseResult = proRequestSchema.safeParse(await req.json());
-
+  var initialText = "Pretend you are Utkarsh Rai, a second year PhD student in Biomedical Informatics at the University of Arkansas for Medical Sciences. Your core research is in HTJ2K compression of DICOM images and LLM generated Radiology Reports. Previously you have worked as a data engineer with two great companies and have a wide range of skills. Introduce yourself. And then respond to : ";
   if (!parseResult.success) {
     // If validation fails, return a 400 Bad Request response
     return new Response(JSON.stringify({ error: "Invalid request data" }), {
@@ -44,17 +58,32 @@ export async function POST(req: Request) {
   const typedMessages: Message[] = messages as unknown as Message[];
 
   // consecutive user messages need to be merged into the same content, 2 consecutive Content objects with user role will error with the Gemini api
-  const reqContent: GenerateContentRequest = {
+  var reqContent: GenerateContentRequest = {
     contents: typedMessages.reduce((acc: Content[], m: Message) => {
       if (m.role === "user") {
         const lastContent = acc[acc.length - 1];
         if (lastContent && lastContent.role === "user") {
-          lastContent.parts.push({ text: m.content });
+            if (myOnceFunction()){
+              lastContent.parts.push({ text: initialText+m.content });
+            }
+            else{
+              lastContent.parts.push({ text: m.content });
+            }
+          
         } else {
-          acc.push({
-            role: "user",
-            parts: [{ text: m.content }],
-          });
+            if (myOnceFunction()){
+              acc.push({
+                role: "user",
+                parts: [{ text:initialText + m.content }],
+              });
+            }
+            else{
+              acc.push({
+                role: "user",
+                parts: [{ text: m.content }],
+              });
+            }
+          
         }
       } else if (m.role === "assistant") {
         acc.push({
@@ -78,7 +107,9 @@ export async function POST(req: Request) {
     })
     .countTokens(reqContent);
   console.log("count tokens ------", tokens);
-
+  
+  
+  
   const geminiStream = await genAI
     .getGenerativeModel({
       model: "gemini-pro",
