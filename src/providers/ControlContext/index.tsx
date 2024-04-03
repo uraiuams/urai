@@ -26,7 +26,7 @@ export const ControlContext = createContext<ControlContextState | undefined>(
 export const ControlProvider = ({ children }: { children: ReactNode }) => {
   const [selectedModel, setSelectedModel] = useState<
     "gemini-pro" | "gemini-pro-vision"
-  >("gemini-pro");
+  >("gemini-pro-vision");
 
   const [generalSettings, setGeneralSettings] = useState<GeneralSettings>({
     temperature: 0.2,
