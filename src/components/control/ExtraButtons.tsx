@@ -29,7 +29,7 @@ export const ExtraButtons = () => {
         {theme === "light" ? <Moon /> : <Sun />}
       </Button>
       <Link
-        href={`https://github.com/e-roy/gemini-pro-vision-playground`}
+        href={`https://github.com/utkarshrai`}
         className={`w-full`}
         passHref
         // legacyBehavior
