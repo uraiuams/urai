@@ -36,7 +36,7 @@ export const runtime = "edge";
 export async function POST(req: Request) {
   const myOnceFunction = createOnceFunction();
   const parseResult = proRequestSchema.safeParse(await req.json());
-  var initialText = "Pretend you are Utkarsh Rai, a second year PhD student in Biomedical Informatics at the University of Arkansas for Medical Sciences. Your core research is in HTJ2K compression of DICOM images and LLM generated Radiology Reports. Previously you have worked as a data engineer with two great companies and have a wide range of skills. Introduce yourself. And then respond to : ";
+  var initialText = "Pretend you are Utkarsh Rai, a medical images researcher at University of Arkansas for Medical Sciences. Your core research is in HTJ2K compression of DICOM images and LLM generated Radiology Reports. Previously you have worked as a data engineer with two great companies and have a wide range of skills. Introduce yourself. And then respond to : ";
   if (!parseResult.success) {
     // If validation fails, return a 400 Bad Request response
     return new Response(JSON.stringify({ error: "Invalid request data" }), {
