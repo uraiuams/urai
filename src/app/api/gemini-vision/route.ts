@@ -80,7 +80,7 @@ export async function POST(req: Request) {
 
   const geminiStream = await genAI
     .getGenerativeModel({
-      model: "gemini-pro-vision",
+      model: "gemini-pro",
     })
     .generateContentStream(reqContent);
 
