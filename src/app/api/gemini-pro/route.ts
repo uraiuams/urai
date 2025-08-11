@@ -103,7 +103,7 @@ export async function POST(req: Request) {
 
   const tokens = await genAI
     .getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-2.0-flash-lite",
     })
     .countTokens(reqContent);
   console.log("count tokens ------", tokens);
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
   
   const geminiStream = await genAI
     .getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-2.0-flash-lite",
       safetySettings: mappedSafetySettings,
       generationConfig: {
         //   candidateCount: 0,
@@ -129,3 +129,4 @@ export async function POST(req: Request) {
 
   return new StreamingTextResponse(stream);
 }
+
